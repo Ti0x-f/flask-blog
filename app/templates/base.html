@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta name='author' content='Antoine Facerias'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <link rel='stylesheet' href='{{ url_for("static", filename="css/style.css") }}'>
+    <title>{{ title }} - Antoine Facerias</title>
+  </head>
+  <body>
+    <nav class='container'>
+      <div class='logo'>
+        <img src='{{ url_for("static", filename="img/logo_200x200.png") }}'>
+      </div>
+      <div class='navigation'>
+        <ul>
+          <li><a href='#'>Home</a></li>
+          <li><a href='#'>Blog</a></li>
+          <li><a href='#'>Contact</a></li>
+        </ul>
+      </div>
+      <div class='social-medias'>
+        <ul>
+          <li><a href='#'><img src=' {{ url_for("static", filename="img/twitter.png") }}'></a></li>
+          <li><a href='#'><img src=' {{ url_for("static", filename="img/github.png") }}'></a></li>
+          <li><a href='#'><img src=' {{ url_for("static", filename="img/RSS.png") }}'></a></li>
+        </ul>
+      </div>
+    </nav>
+    {% block content %}{% endblock %}
+    <footer>
+      <div>
+        <div>
+          <img src='{{ url_for("static", filename="img/logo_200x200.png") }}'>
+        </div>
+        <div>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </div>
+      </div>
+      <div>
+        <div>
+          <ul>
+            <li><a href='#'>Home</a></li>
+            <li><a href='#'>Blog</a></li>
+            <li><a href='#'>Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Social medias</h3>
+          <ul>
+            <li><a href='#'>Twitter</a></li>
+            <li><a href='#'>GitHub</a></li>
+            <li><a href='#'>RSS Feed</a></li>
+          </ul>
+        </div>
+      </div>
+      <hr>
+      <p>© Copyright 2020. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
