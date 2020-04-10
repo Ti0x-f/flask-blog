@@ -1,6 +1,5 @@
 # Virtualenv
 .Python
-config.py
 bin
 lib
 include
