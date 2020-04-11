@@ -10,6 +10,11 @@ def index():
     posts = Post.query.all()
     return render_template('index.html', title='Home', posts=posts)
 
+@app.route('/post/<id>')
+def post(id):
+    post = Post.query.filter_by(id=id).first()
+    return render_template('post.html', title=post.title, post=post)
+
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if current_user.is_authenticated:
