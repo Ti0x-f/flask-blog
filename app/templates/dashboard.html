@@ -27,13 +27,14 @@
         </p>
         <p>
           {{ form.description.label }}<br>
-          {{ form.description(size=140) }}<br>
+          {{ form.description(cols=8, rows=5) }}<br>
           {% for error in form.description.errors %}
           <span style='color:red'>[{{ error }}]</span>
           {% endfor %}
         </p>
         <p>
           {{ form.body.label }}<br>
+          {{ form.body(cols=8, rows=10)}}
           {% for error in form.body.errors %}
           <span style='color:red'>[{{ error }}]</span>
           {% endfor %}
@@ -44,5 +45,6 @@
       </form>
     </div>
     <a href="{{ url_for('all_posts') }}">See all posts</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
   </body>
 </html>

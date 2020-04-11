@@ -7,7 +7,8 @@ from app import app, db
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html', title='Home')
+    posts = Post.query.all()
+    return render_template('index.html', title='Home', posts=posts)
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
@@ -32,17 +33,26 @@ def dashboard():
             body=form.body.data)
         db.session.add(new_post)
         db.session.commit()
-        flask("New post has been posted")
+        flash("New post has been posted")
         return redirect(url_for('dashboard'))
     return render_template('dashboard.html', title='Dashboard', form=form)
 
 @app.route('/all_posts')
 @login_required
 def all_posts():
-    return render_template('all_posts.html', title='All posts')
+    posts = Post.query.all()
+    return render_template('all_posts.html', title='All posts', posts=posts)
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+@app.route('/delete_post/<id>')
+@login_required
+def delete_post(id):
+    post = Post.query.filter_by(id=id).first()
+    db.session.delete(post)
+    db.session.commit()
+    return redirect(url_for('all_posts'))

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset = 'utf-8'>
+    <title>{{ title }} - Antoine Facerias</title>
+    <link rel='stylesheet' src='url_for("static", filename="css/style.css")'>
+  </head>
+  <body>
+    {% for post in posts%}
+    {% include '_post_dashboard.html' %}
+    {% endfor %}
+    <a href="{{ url_for('dashboard') }}">Back</a>
+  </body>
+</html>
