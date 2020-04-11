@@ -1,17 +1,17 @@
 from flask import render_template, redirect, url_for, flash
 from flask_login import current_user, login_required, login_user, logout_user
-from app.forms import LoginDashboardForm, NewPostForm
+from app.forms import LoginDashboardForm, NewPostForm, ContactForm
 from app.models import User, Post
 from app import app, db
 
 @app.route('/')
 @app.route('/index')
-def index():
-    posts = Post.query.all()
+def index(): #Render 5 posts on the index page, ordered by descendant timestamps
+    posts = Post.query.order_by(Post.timestamp.desc()).limit(5)
     return render_template('index.html', title='Home', posts=posts)
 
 @app.route('/post/<id>')
-def post(id):
+def post(id): #View for full post, since the blog and index view only display title + description
     post = Post.query.filter_by(id=id).first()
     return render_template('post.html', title=post.title, post=post)
 
@@ -33,7 +33,7 @@ def admin():
 @login_required
 def dashboard():
     form = NewPostForm()
-    if form.validate_on_submit():
+    if form.validate_on_submit(): #Adding new post
         new_post = Post(title=form.title.data, description=form.description.data,
             body=form.body.data)
         db.session.add(new_post)
@@ -44,7 +44,7 @@ def dashboard():
 
 @app.route('/all_posts')
 @login_required
-def all_posts():
+def all_posts(): #In dashboard, display all blog posts with pagination and update/delete options
     posts = Post.query.all()
     return render_template('all_posts.html', title='All posts', posts=posts)
 
@@ -61,3 +61,8 @@ def delete_post(id):
     db.session.delete(post)
     db.session.commit()
     return redirect(url_for('all_posts'))
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    form = ContactForm()
+    return render_template('contact.html', title='Contact', form=form)

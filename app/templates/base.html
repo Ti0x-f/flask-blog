@@ -10,12 +10,14 @@
   <body>
     <nav class='container'>
       <div class='logo'>
-        <img src='{{ url_for("static", filename="img/logo_200x200.png") }}'>
+        <a href="{{ url_for('index') }}">
+          <img src='{{ url_for("static", filename="img/logo_200x200.png") }}'>
+        </a>
       </div>
       <div class='navigation'>
         <ul>
           <li><a href='{{ url_for("index") }}'>Home</a></li>
-          <li><a href='{{ url_for("blog") }}'>Blog</a></li>
+          <li><a href='#'>Blog</a></li>
           <li><a href='{{ url_for("contact") }}'>Contact</a></li>
         </ul>
       </div>
@@ -46,17 +48,17 @@
       <div>
         <div>
           <ul>
-            <li><a href='#'>Home</a></li>
+            <li><a href='{{ url_for("index") }}'>Home</a></li>
             <li><a href='#'>Blog</a></li>
-            <li><a href='#'>Contact</a></li>
+            <li><a href='{{ url_for("contact") }}'>Contact</a></li>
           </ul>
         </div>
         <div>
           <h3>Social medias</h3>
           <ul>
-            <li><a href='#'>Twitter</a></li>
-            <li><a href='#'>GitHub</a></li>
-            <li><a href='#'>RSS Feed</a></li>
+            <li><a href='#'><img src=' {{ url_for("static", filename="img/twitter.png") }}'></a></li>
+            <li><a href='#'><img src=' {{ url_for("static", filename="img/github.png") }}'></a></li>
+            <li><a href='#'><img src=' {{ url_for("static", filename="img/RSS.png") }}'></a></li>
           </ul>
         </div>
       </div>
