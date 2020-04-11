@@ -1,6 +1,7 @@
 from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -19,7 +20,8 @@ class Post(db.Model):
     title = db.Column(db.String(80), unique = True)
     description = db.Column(db.String(140))
     body = db.Column(db.String)
-    
+    timestamp = db.Column(db.DateTime, default = datetime.utcnow)
+
 
 
 @login.user_loader
