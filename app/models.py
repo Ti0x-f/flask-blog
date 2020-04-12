@@ -40,11 +40,11 @@ class Comment(db.Model):
 
 class Stats(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    comments = db.Column(db.Integer, default = 1)
+    comments = db.Column(db.Integer, default = 0)
     day_comments = db.Column(db.Date, default = date.today)
     visits = db.Column(db.Integer, default = 1)
     day_visits = db.Column(db.Date, default = date.today)
-    shares = db.Column(db.Integer, default = 1)
+    shares = db.Column(db.Integer, default = 0)
     day_shares = db.Column(db.Date, default = date.today)
 
 @login.user_loader

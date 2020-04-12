@@ -7,6 +7,17 @@ from datetime import date
 from config import Config
 from app import app, db
 
+@app.before_request
+def before_request():
+        visits = Stats.query.filter_by(day_visits = date.today()).first()
+        if visits is None:
+            new_day_visits = Stats()
+            db.session.add(new_day_visits)
+            db.session.commit()
+        else:
+            visits.visits += 1
+            db.session.commit()
+
 @app.route('/')
 @app.route('/index')
 def index(): #Render 5 posts on the index page, ordered by descendant timestamps
@@ -52,7 +63,7 @@ def admin():
 @login_required
 def dashboard():
     form = NewPostForm()
-    comments = Stats.query.filter_by(day_comments = date.today()).first()
+    stats = Stats.query.filter_by(day_comments = date.today()).first()
     if form.validate_on_submit(): #Adding new post
         new_post = Post(title=form.title.data, description=form.description.data,
             body=form.body.data, user_id=current_user.id)
@@ -60,7 +71,7 @@ def dashboard():
         db.session.commit()
         flash("New post has been posted")
         return redirect(url_for('dashboard'))
-    return render_template('dashboard.html', title='Dashboard', form=form, number_of_comments = comments.comments)
+    return render_template('dashboard.html', title='Dashboard', form=form, stats = stats)
 
 @app.route('/all_posts')
 @login_required

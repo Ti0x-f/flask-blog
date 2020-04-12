@@ -8,9 +8,9 @@
   <body>
     <div class='stats'>
       <ul>
-        <li>New comments today: {% if number_of_comments %}{{ number_of_comments }}{% endif %}</li>
-        <li>Number of visits today: </li>
-        <li>Number of shares today: </li>
+        <li>New comments today: {% if stats %}{{ stats.comments }}{% else %} 0 {% endif %}</li>
+        <li>Number of visits today: {% if stats %}{{ stats.visits }}{% else %} 0 {% endif %} </li>
+        <li>Number of shares today: {% if stats %}{{ stats.shares }}{% else %} 0 {% endif %}</li>
       </ul>
       <div class='graphs'>
       </div>
