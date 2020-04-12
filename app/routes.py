@@ -65,7 +65,7 @@ def delete_post(id):
     return redirect(url_for('all_posts'))
 
 @app.route('/contact', methods=['GET', 'POST'])
-def contact():
+def contact(): #Send email through contact page. Config in config.py
     form = ContactForm()
     if form.validate_on_submit():
         html_body = '<p>' + form.message.data + '</p>'
@@ -74,3 +74,8 @@ def contact():
         flash('Your message has been sent.')
         return redirect(url_for('index'))
     return render_template('contact.html', title='Contact', form=form)
+
+@app.route('/blog')
+def blog():
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template('blog.html', title='Blog', posts=posts)
