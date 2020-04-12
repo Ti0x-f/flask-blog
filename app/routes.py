@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_required, login_user, logout_user
 from app.forms import LoginDashboardForm, NewPostForm, ContactForm
 from app.models import User, Post
@@ -47,8 +47,13 @@ def dashboard():
 @app.route('/all_posts')
 @login_required
 def all_posts(): #In dashboard, display all blog posts with pagination and update/delete options
-    posts = Post.query.all()
-    return render_template('all_posts.html', title='All posts', posts=posts)
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.order_by(Post.timestamp.desc()).paginate(
+        page, app.config['POSTS_PER_PAGE'], False)
+    next_url = url_for('all_posts', page=posts.next_num) if posts.has_next else None
+    prev_url = url_for('all_posts', page=posts.prev_num) if posts.has_prev else None
+    return render_template('all_posts.html', title='All posts', posts=posts.items,
+        next_url=next_url, prev_url=prev_url)
 
 @app.route('/logout')
 @login_required
@@ -77,5 +82,10 @@ def contact(): #Send email through contact page. Config in config.py
 
 @app.route('/blog')
 def blog():
-    posts = Post.query.order_by(Post.timestamp.desc()).all()
-    return render_template('blog.html', title='Blog', posts=posts)
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.order_by(Post.timestamp.desc()).paginate(
+        page, app.config['POSTS_PER_PAGE'], False)
+    next_url = url_for('blog', page=posts.next_num) if posts.has_next else None
+    prev_url = url_for('blog', page=posts.prev_num) if posts.has_prev else None
+    return render_template('blog.html', title='Blog', posts=posts.items,
+        next_url=next_url, prev_url=prev_url)
