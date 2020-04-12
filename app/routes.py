@@ -1,8 +1,9 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_required, login_user, logout_user
 from app.forms import LoginDashboardForm, NewPostForm, ContactForm, CommentForm
-from app.models import User, Post, Comment
+from app.models import User, Post, Comment, Stats
 from app.email import send_email
+from datetime import date
 from config import Config
 from app import app, db
 
@@ -21,6 +22,14 @@ def post(id): #View for full post, since the blog and index view only display ti
         comment = Comment(email = form.email.data, name = form.name.data, comment = form.comment.data, post_id=id)
         db.session.add(comment)
         db.session.commit()
+        stat_comment = Stats.query.filter_by(day_comments = date.today()).first()
+        if stat_comment is None:
+            new_stat = Stats()
+            db.session.add(new_stat)
+            db.session.commit()
+        else:
+            stat_comment.comments += 1
+            db.session.commit()
         flash('Your comment has been added.')
         return redirect(url_for('post', id=id))
     return render_template('post.html', title=post.title, form=form, post=post, comments=comments)
@@ -43,6 +52,7 @@ def admin():
 @login_required
 def dashboard():
     form = NewPostForm()
+    comments = Stats.query.filter_by(day_comments = date.today()).first()
     if form.validate_on_submit(): #Adding new post
         new_post = Post(title=form.title.data, description=form.description.data,
             body=form.body.data, user_id=current_user.id)
@@ -50,7 +60,7 @@ def dashboard():
         db.session.commit()
         flash("New post has been posted")
         return redirect(url_for('dashboard'))
-    return render_template('dashboard.html', title='Dashboard', form=form)
+    return render_template('dashboard.html', title='Dashboard', form=form, number_of_comments = comments.comments)
 
 @app.route('/all_posts')
 @login_required

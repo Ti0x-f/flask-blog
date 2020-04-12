@@ -1,7 +1,7 @@
 from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, date
 from hashlib import md5
 
 class User(db.Model, UserMixin):
@@ -38,7 +38,14 @@ class Comment(db.Model):
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
             digest, size)
 
-
+class Stats(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    comments = db.Column(db.Integer, default = 1)
+    day_comments = db.Column(db.Date, default = date.today)
+    visits = db.Column(db.Integer, default = 1)
+    day_visits = db.Column(db.Date, default = date.today)
+    shares = db.Column(db.Integer, default = 1)
+    day_shares = db.Column(db.Date, default = date.today)
 
 @login.user_loader
 def load_user(id):
