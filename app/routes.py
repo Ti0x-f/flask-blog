@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_required, login_user, logout_user
-from app.forms import LoginDashboardForm, NewPostForm, ContactForm
-from app.models import User, Post
+from app.forms import LoginDashboardForm, NewPostForm, ContactForm, CommentForm
+from app.models import User, Post, Comment
 from app.email import send_email
 from config import Config
 from app import app, db
@@ -12,10 +12,18 @@ def index(): #Render 5 posts on the index page, ordered by descendant timestamps
     posts = Post.query.order_by(Post.timestamp.desc()).limit(5)
     return render_template('index.html', title='Home', posts=posts)
 
-@app.route('/post/<id>')
+@app.route('/post/<id>', methods=['GET', 'POST'])
 def post(id): #View for full post, since the blog and index view only display title + description
     post = Post.query.filter_by(id=id).first()
-    return render_template('post.html', title=post.title, post=post)
+    comments = Comment.query.filter_by(post_id=id).order_by(Comment.timestamp.desc()).all()
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment = Comment(email = form.email.data, name = form.name.data, comment = form.comment.data, post_id=id)
+        db.session.add(comment)
+        db.session.commit()
+        flash('Your comment has been added.')
+        return redirect(url_for('post', id=id))
+    return render_template('post.html', title=post.title, form=form, post=post, comments=comments)
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
@@ -37,7 +45,7 @@ def dashboard():
     form = NewPostForm()
     if form.validate_on_submit(): #Adding new post
         new_post = Post(title=form.title.data, description=form.description.data,
-            body=form.body.data)
+            body=form.body.data, user_id=current_user.id)
         db.session.add(new_post)
         db.session.commit()
         flash("New post has been posted")
