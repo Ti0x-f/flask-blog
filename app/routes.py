@@ -2,6 +2,8 @@ from flask import render_template, redirect, url_for, flash
 from flask_login import current_user, login_required, login_user, logout_user
 from app.forms import LoginDashboardForm, NewPostForm, ContactForm
 from app.models import User, Post
+from app.email import send_email
+from config import Config
 from app import app, db
 
 @app.route('/')
@@ -65,4 +67,10 @@ def delete_post(id):
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     form = ContactForm()
+    if form.validate_on_submit():
+        html_body = '<p>' + form.message.data + '</p>'
+        send_email(form.subject.data, form.email.data, app.config['ADMINS'],
+            form.message.data, html_body)
+        flash('Your message has been sent.')
+        return redirect(url_for('index'))
     return render_template('contact.html', title='Contact', form=form)
