@@ -7,7 +7,7 @@ from datetime import date
 from config import Config
 from app import app, db
 
-@app.before_request
+@app.before_request #Update database for each new visit. Problem: takes in account my own visits
 def before_request():
         visits = Stats.query.filter_by(day_visits = date.today()).first()
         if visits is None:
@@ -27,14 +27,18 @@ def index(): #Render 5 posts on the index page, ordered by descendant timestamps
 @app.route('/post/<id>', methods=['GET', 'POST'])
 def post(id): #View for full post, since the blog and index view only display title + description
     post = Post.query.filter_by(id=id).first()
-    comments = Comment.query.filter_by(post_id=id).order_by(Comment.timestamp.desc()).all()
+    page = request.args.get('page', 1, type=int)
+    comments = Comment.query.filter_by(post_id=id).order_by(Comment.timestamp.desc()).paginate(
+        page, app.config['COMMENTS_PER_POST'], False)
+    next_page = url_for('post', id=id, page=comments.next_num) if comments.has_next else None
+    prev_page = url_for('post', id=id, page=comments.prev_num) if comments.has_prev else None
     form = CommentForm()
-    if form.validate_on_submit():
+    if form.validate_on_submit(): #Post a new comment
         comment = Comment(email = form.email.data, name = form.name.data, comment = form.comment.data, post_id=id)
         db.session.add(comment)
         db.session.commit()
         stat_comment = Stats.query.filter_by(day_comments = date.today()).first()
-        if stat_comment is None:
+        if stat_comment is None: #Probably will never happen since need visit first
             new_stat = Stats()
             db.session.add(new_stat)
             db.session.commit()
@@ -43,7 +47,8 @@ def post(id): #View for full post, since the blog and index view only display ti
             db.session.commit()
         flash('Your comment has been added.')
         return redirect(url_for('post', id=id))
-    return render_template('post.html', title=post.title, form=form, post=post, comments=comments)
+    return render_template('post.html', title=post.title, form=form, post=post,
+     comments=comments.items, next_page=next_page, prev_page=prev_page)
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
@@ -63,7 +68,7 @@ def admin():
 @login_required
 def dashboard():
     form = NewPostForm()
-    stats = Stats.query.filter_by(day_comments = date.today()).first()
+    stats = Stats.query.filter_by(day_comments = date.today()).first() #Query for stats of the day
     if form.validate_on_submit(): #Adding new post
         new_post = Post(title=form.title.data, description=form.description.data,
             body=form.body.data, user_id=current_user.id)

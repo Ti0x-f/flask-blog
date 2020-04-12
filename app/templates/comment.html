@@ -3,6 +3,8 @@
 <h3>{{ comment.name }}</h3>
 <p>{{ comment.comment }}<p>
 {% endfor %}
+{% if prev_page %}<a href='{{ prev_page }}'>Newer</a>{% endif %}
+{% if next_page %}<a href='{{ next_page }}'>Older</a>{% endif %}
 <form action='' method='POST'>
   {{ form.hidden_tag() }}
   <p>
