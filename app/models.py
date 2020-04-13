@@ -53,12 +53,10 @@ class Stats(db.Model):
     day_comments = db.Column(db.Date, default = date.today)
     visits = db.Column(db.Integer, default = 1)
     day_visits = db.Column(db.Date, default = date.today)
-    shares = db.Column(db.Integer, default = 0)
-    day_shares = db.Column(db.Date, default = date.today)
 
     def __repr__(self):
         return f'{self.id}, {self.comments}, {self.day_comments}, {self.visits}, \
-            {self.day_visits}, {self.shares}, {self.day_shares}'
+            {self.day_visits}'
 
 @login.user_loader
 def load_user(id):

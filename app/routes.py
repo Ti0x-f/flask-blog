@@ -1,10 +1,11 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, make_response
 from flask_login import current_user, login_required, login_user, logout_user
 from app.forms import LoginDashboardForm, NewPostForm, ContactForm, CommentForm, EditPostForm
 from app.models import User, Post, Comment, Stats
 from app.email import send_email
 from datetime import date
 from config import Config
+from feedgen.feed import FeedGenerator
 from app import app, db
 
 @app.before_request #Update database for each new visit. Problem: takes in account my own visits
@@ -141,3 +142,22 @@ def update(id):
         form.description.data = post.description
         form.body.data = post.body
     return render_template('update.html', title='Update post', form=form)
+
+@app.route('/rss')
+def rss():
+    fg = FeedGenerator()
+    fg.title('RSS Feed for the blog')
+    fg.description('Your regular RSS Feed to follow the blog')
+    fg.link(href='{{url_for("index")}}')
+
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+
+    for post in posts:
+        fe = fg.add_entry()
+        fe.title(post.title)
+        fe.link(href='{{ url_for("post", id=post.id) }}')
+        fe.description(post.description)
+
+    response = make_response(fg.rss_str())
+    response.headers.set('Content-type', 'application/rss+xml')
+    return response
