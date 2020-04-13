@@ -1,6 +1,9 @@
-<article>
-  <h2>{{ post.title }}</h2>
-  <p>Posted {{ moment(post.timestamp).fromNow() }}</p>
-  <p>{{ post.description }}</p>
-  <a href='{{ url_for("post", id = post.id) }}'>Read more</a>
-</article>
+<div class="card" style="width: 100%;">
+  <div class="card-body">
+    <h3 class="card-title">{{ post.title }}</h3>
+    <hr>
+    <h6 class="card-subtitle mb-2 text-muted">Posted {{ moment(post.timestamp).fromNow() }}</h6>
+    <p class="card-text">{{ post.description }}</p>
+    <a href="{{ url_for('post', id = post.id) }}" class="card-link">Read more</a>
+  </div>
+</div>

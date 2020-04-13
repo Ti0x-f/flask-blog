@@ -3,78 +3,69 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset='utf-8'>
-    <meta name='author' content='Antoine Facerias'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <link rel='stylesheet' href='{{ url_for("static", filename="css/style.css") }}'>
-    <title>{{ title }} - Antoine Facerias</title>
+    {% block title %}
+      {{ title }} - Antoine Facerias
+    {% endblock%}
+    {% block styles %}
+      {{ super() }}
+      <link rel="stylesheet" href="{{ url_for('.static', filename='css/style.css') }}">
+    {% endblock %}
   </head>
-  {% block content %}
-    <nav class='container'>
-      <div class='logo'>
-        <a href="{{ url_for('index') }}">
-          <img src='{{ url_for("static", filename="img/logo_200x200.png") }}'>
-        </a>
-      </div>
-      <div class='navigation'>
-        <ul>
-          <li><a href='{{ url_for("index") }}'>Home</a></li>
-          <li><a href='{{ url_for("blog") }}'>Blog</a></li>
-          <li><a href='{{ url_for("contact") }}'>Contact</a></li>
-        </ul>
-      </div>
-      <div class='social-medias'>
-        <ul>
-          <li><a href='https://twitter.com/AntoineFcrias'><img src=' {{ url_for("static", filename="img/twitter.png") }}'></a></li>
-          <li><a href='https://github.com/Atienon'><img src=' {{ url_for("static", filename="img/github.png") }}'></a></li>
-          <li><a href='{{ url_for("rss") }}'><img src=' {{ url_for("static", filename="img/RSS.png") }}'></a></li>
-        </ul>
-      </div>
-    </nav>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul>
-      {% for message in messages %}
-      <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
-    {% block app_content %}{% endblock %}
-    <footer>
-      <div>
-        <div>
-          <img src='{{ url_for("static", filename="img/logo_200x200.png") }}'>
-        </div>
-        <div>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-        </div>
-      </div>
-      <div>
-        <div>
-          <ul>
-            <li><a href='{{ url_for("index") }}'>Home</a></li>
-            <li><a href='{{ url_for("blog") }}'>Blog</a></li>
-            <li><a href='{{ url_for("contact") }}'>Contact</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3>Social medias</h3>
-          <ul>
+    {% block navbar %}
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a href="{{ url_for('index') }}">
+              <img src='{{ url_for("static", filename="img/logo_200x200.png") }}' width=100 height=100>
+            </a>
+          </div>
+            <ul class="nav navbar-nav">
+              <li style='top:25px'><a href='{{ url_for("index") }}'>Home</a></li>
+              <li style='top:25px'><a href='{{ url_for("blog") }}'>Blog</a></li>
+              <li style='top:25px'><a href='{{ url_for("contact") }}'>Contact</a></li>
+            </ul>
+          <ul class=" nav navbar-nav navbar-right">
             <li><a href='https://twitter.com/AntoineFcrias'><img src=' {{ url_for("static", filename="img/twitter.png") }}'></a></li>
             <li><a href='https://github.com/Atienon'><img src=' {{ url_for("static", filename="img/github.png") }}'></a></li>
             <li><a href='{{ url_for("rss") }}'><img src=' {{ url_for("static", filename="img/RSS.png") }}'></a></li>
           </ul>
         </div>
+      </nav>
+    {% endblock %}
+    {% block content %}
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-info" role="alert">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <div class='container'>
+    {% block app_content %}{% endblock %}
+  </div>
+    <hr>
+    <footer>
+      <div class='container'>
+        <div class='row'>
+          <div class='col-sm-3'>
+            <img src="{{ url_for('static', filename='img/logo_200x200.png')}}" width=150 height=150>
+          </div>
+          <div class='col-sm-9'>
+              <p>
+                Hello everyone and thank you for visiting this blog! This blog is a project I wanted to build for a bit, in order to improve my skills in web development.
+              </p>
+              <p>
+                I don't know if you'll find a lot of content at the moment of your visit, but know that I plan on posting time to time, even though I haven't decided what kind of content yet.
+              </p>
+              <p>
+                If you're a developer, feel free to check out the repository for this blog on GitHub and let me know of any remarks!
+              </p>
+          </div>
+        </div>
       </div>
       <hr>
-      <p>© Copyright 2020. All rights reserved.</p>
+      <p style='text-align:center'>© Copyright 2020. All rights reserved.</p>
     </footer>
 {% endblock %}
 {% block scripts %}
