@@ -2,6 +2,7 @@
 <img src='{{ comment.avatar(64) }}'>
 <h3>{{ comment.name }}</h3>
 <p>{{ comment.comment }}<p>
+<p>Posted {{ moment(comment.timestamp).fromNow() }}</p>
 {% endfor %}
 {% if prev_page %}<a href='{{ prev_page }}'>Newer</a>{% endif %}
 {% if next_page %}<a href='{{ next_page }}'>Older</a>{% endif %}
