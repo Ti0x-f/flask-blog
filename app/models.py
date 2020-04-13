@@ -16,6 +16,9 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def __repr__(self):
+        return f'{self.id}, {self.email}'
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String(80), unique = True)
@@ -24,6 +27,9 @@ class Post(db.Model):
     timestamp = db.Column(db.DateTime, default = datetime.utcnow)
     comments = db.relationship('Comment', backref='comments', lazy='dynamic')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return f'{self.id}, {self.title}, {self.description}, {self.body}, {self.timestamp}'
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -38,6 +44,9 @@ class Comment(db.Model):
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
             digest, size)
 
+    def __repr__(self):
+        return f'{self.id}, {self.email}, {self.name}, {self.comment}, {self.timestamp}'
+
 class Stats(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     comments = db.Column(db.Integer, default = 0)
@@ -46,6 +55,10 @@ class Stats(db.Model):
     day_visits = db.Column(db.Date, default = date.today)
     shares = db.Column(db.Integer, default = 0)
     day_shares = db.Column(db.Date, default = date.today)
+
+    def __repr__(self):
+        return f'{self.id}, {self.comments}, {self.day_comments}, {self.visits}, \
+            {self.day_visits}, {self.shares}, {self.day_shares}'
 
 @login.user_loader
 def load_user(id):
