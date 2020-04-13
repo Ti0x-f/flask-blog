@@ -6,6 +6,8 @@
         <li>Number of visits today: {% if stats %}{{ stats.visits }}{% else %} 0 {% endif %} </li>
       </ul>
       <div class='graphs'>
+        <img src="{{ url_for('comments_graph' )}}" heihgt=200>
+        <img src="{{ url_for('visits_graph') }}" heihgh=200>
       </div>
     </div>
     <div>

@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request, make_response
+from flask import render_template, redirect, url_for, flash, request, make_response, Response
 from flask_login import current_user, login_required, login_user, logout_user
 from app.forms import LoginDashboardForm, NewPostForm, ContactForm, CommentForm, EditPostForm
 from app.models import User, Post, Comment, Stats
@@ -6,7 +6,11 @@ from app.email import send_email
 from datetime import date
 from config import Config
 from feedgen.feed import FeedGenerator
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 from app import app, db
+
+import io
 
 @app.before_request #Update database for each new visit. Problem: takes in account my own visits
 def before_request():
@@ -161,3 +165,29 @@ def rss():
     response = make_response(fg.rss_str())
     response.headers.set('Content-type', 'application/rss+xml')
     return response
+
+@app.route('/comments_graph')
+def comments_graph():
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+    stats = Stats.query.all()
+    x_points = [stat.day_comments.strftime("%m-%d-%Y") for stat in stats]
+    y_points = [stat.comments for stat in stats]
+    axis.plot(x_points, y_points, 'bo')
+
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype="image/png")
+
+@app.route('/visits_graph')
+def visits_graph():
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+    stats = Stats.query.all()
+    x_points = [stat.day_visits.strftime("%m-%d-%Y") for stat in stats]
+    y_points = [stat.visits for stat in stats]
+    axis.plot(x_points, y_points, 'bo')
+
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
