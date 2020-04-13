@@ -13,6 +13,12 @@ class NewPostForm(FlaskForm):
     body = TextAreaField('Body', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+class EditPostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    body = TextAreaField('Body', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
 class ContactForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     email2 = StringField('Repeat email', validators=[DataRequired(), Email(), EqualTo('email')])

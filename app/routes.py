@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_required, login_user, logout_user
-from app.forms import LoginDashboardForm, NewPostForm, ContactForm, CommentForm
+from app.forms import LoginDashboardForm, NewPostForm, ContactForm, CommentForm, EditPostForm
 from app.models import User, Post, Comment, Stats
 from app.email import send_email
 from datetime import date
@@ -123,3 +123,21 @@ def blog():
     prev_url = url_for('blog', page=posts.prev_num) if posts.has_prev else None
     return render_template('blog.html', title='Blog', posts=posts.items,
         next_url=next_url, prev_url=prev_url)
+
+@app.route('/update/<id>', methods = ['GET', 'POST'])
+@login_required
+def update(id):
+    post = Post.query.filter_by(id=id).first()
+    form = EditPostForm()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.description = form.description.data
+        post.body = form.body.data
+        db.session.commit()
+        flash('Changes have been saved')
+        return redirect(url_for('all_posts'))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.description.data = post.description
+        form.body.data = post.body
+    return render_template('update.html', title='Update post', form=form)

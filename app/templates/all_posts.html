@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset = 'utf-8'>
-    <title>{{ title }} - Antoine Facerias</title>
-    <link rel='stylesheet' src='url_for("static", filename="css/style.css")'>
-  </head>
-  <body>
+{% extends 'base_dashboard.html' %}
+{% block content %}
     {% for post in posts%}
     {% include '_post_dashboard.html' %}
     {% endfor %}
@@ -16,5 +10,4 @@
       <a href ='{{ next_url }}'>Older posts</a>
     {% endif %}
     <a href="{{ url_for('dashboard') }}">Back</a>
-  </body>
-</html>
+{% endblock %}
