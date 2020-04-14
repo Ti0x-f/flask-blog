@@ -23,7 +23,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String(80), unique = True)
     description = db.Column(db.String(140))
-    body = db.Column(db.String)
+    body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default = datetime.utcnow)
     comments = db.relationship('Comment', backref='comments', lazy='dynamic')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
