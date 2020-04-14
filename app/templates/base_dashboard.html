@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset = 'utf-8'>
-    <title>{{ title }} - Antoine Facerias</title>
-    <link rel='stylesheet' src='url_for("static", filename="css/style.css")'>
-  </head>
-  <body>
-  </body>
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}
+  {{ title }} - Antoine Facerias
+{% endblock %}
+{% block content %}
   {% with messages = get_flashed_messages() %}
   {% if messages %}
   <ul>
@@ -16,5 +13,5 @@
   </ul>
   {% endif %}
   {% endwith %}
-  {% block content %}{% endblock %}
-</html>
+  {% block app_content %}{% endblock %}
+{% endblock %}

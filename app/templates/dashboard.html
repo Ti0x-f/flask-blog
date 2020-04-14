@@ -1,44 +1,34 @@
 {% extends 'base_dashboard.html' %}
-{% block content %}
-    <div class='stats'>
-      <ul>
-        <li>New comments today: {% if stats %}{{ stats.comments }}{% else %} 0 {% endif %}</li>
-        <li>Number of visits today: {% if stats %}{{ stats.visits }}{% else %} 0 {% endif %} </li>
-      </ul>
-      <div class='graphs'>
-        <img src="{{ url_for('comments_graph' )}}" heihgt=200>
-        <img src="{{ url_for('visits_graph') }}" heihgh=200>
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block app_content %}
+    <div class='container'>
+      <div class='row'>
+        <div class='col-sm-6'>
+          <img src="{{ url_for('comments_graph') }}" height=400>
+        </div>
+        <div class='col-sm-3'>
+          <img src="{{ url_for('visits_graph') }}" height=400>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-sm'>
+          {{ wtf.quick_form(form) }}
+        </div>
+      </div>
+      <hr>
+      <div class='row'>
+        <div class='col-sm-4'>
+          <ul>
+            <li>New comments today: {{ stats.comments }}</li>
+            <li>Number of visits today: {{ stats.visits }}</li>
+          </ul>
+        </div>
+        <div class='col-sm-6'>
+          <ul>
+            <li><a href="{{ url_for('all_posts') }}">See all posts</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+          </ul>
+        </div>
       </div>
     </div>
-    <div>
-      <form action='' method='POST'>
-        {{ form.hidden_tag() }}
-        <p>
-          {{ form.title.label }}<br>
-          {{ form.title(size=80) }}<br>
-          {% for error in form.title.errors %}
-          <span srtyle='color:red'>[{{ error }} ]</span>
-          {% endfor %}
-        </p>
-        <p>
-          {{ form.description.label }}<br>
-          {{ form.description(cols=8, rows=5) }}<br>
-          {% for error in form.description.errors %}
-          <span style='color:red'>[{{ error }}]</span>
-          {% endfor %}
-        </p>
-        <p>
-          {{ form.body.label }}<br>
-          {{ form.body(cols=8, rows=10)}}
-          {% for error in form.body.errors %}
-          <span style='color:red'>[{{ error }}]</span>
-          {% endfor %}
-        </p>
-        <p>
-          {{ form.submit() }}
-        </p>
-      </form>
-    </div>
-    <a href="{{ url_for('all_posts') }}">See all posts</a>
-    <a href="{{ url_for('logout') }}">Logout</a>
 {% endblock %}
