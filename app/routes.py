@@ -27,7 +27,7 @@ def register():
     form = LoginDashboardForm()
     if form.validate_on_submit():
         user = User(email=form.email.data)
-        user.set_password(form.data.password)
+        user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('index'))
