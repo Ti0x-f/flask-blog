@@ -22,7 +22,7 @@ def before_request():
         else:
             visits.visits += 1
             db.session.commit()
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     form = LoginDashboardForm()
     if form.validate_on_submit():
