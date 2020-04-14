@@ -17,4 +17,4 @@ moment = Moment(app)
 bootstrap = Bootstrap(app)
 login.login_view = 'admin'
 
-from app import routes, models
+from app import routes, models, errors
