@@ -119,7 +119,7 @@ def contact(): #Send email through contact page. Config in config.py
         return redirect(url_for('index'))
     return render_template('contact.html', title='Contact', form=form)
 
-@app.route('/blog')
+@app.route('/blog') #Display blog posts, paginated, following an env variable value
 def blog():
     page = request.args.get('page', 1, type=int)
     posts = Post.query.order_by(Post.timestamp.desc()).paginate(
@@ -129,25 +129,25 @@ def blog():
     return render_template('blog.html', title='Blog', posts=posts.items,
         next_url=next_url, prev_url=prev_url)
 
-@app.route('/update/<id>', methods = ['GET', 'POST'])
+@app.route('/update/<id>', methods = ['GET', 'POST']) #Simple update function for the posts
 @login_required
 def update(id):
     post = Post.query.filter_by(id=id).first()
     form = EditPostForm()
-    if form.validate_on_submit():
+    if form.validate_on_submit(): #Update when submit button is clicked
         post.title = form.title.data
         post.description = form.description.data
         post.body = form.body.data
         db.session.commit()
         flash('Changes have been saved')
         return redirect(url_for('all_posts'))
-    elif request.method == 'GET':
+    elif request.method == 'GET': #Load the form with the data of the post we are trying to update
         form.title.data = post.title
         form.description.data = post.description
         form.body.data = post.body
     return render_template('update.html', title='Update post', form=form)
 
-@app.route('/rss')
+@app.route('/rss') #Create a RSS feed based on the posts
 def rss():
     fg = FeedGenerator()
     fg.title('RSS Feed for the blog')
@@ -166,7 +166,7 @@ def rss():
     response.headers.set('Content-type', 'application/rss+xml')
     return response
 
-@app.route('/comments_graph')
+@app.route('/comments_graph') #Create a .png graph using matplotlib to show the number of comments
 def comments_graph():
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
@@ -179,7 +179,7 @@ def comments_graph():
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype="image/png")
 
-@app.route('/visits_graph')
+@app.route('/visits_graph') #Same function, but this time we aim at showcasing the number of visits
 def visits_graph():
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
