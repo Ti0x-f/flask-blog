@@ -26,7 +26,7 @@ def before_request():
 def register():
     form = LoginDashboardForm()
     if form.validate_on_submit():
-        user = User(email='form.email.data')
+        user = User(email=form.email.data)
         user.set_password(form.data.password)
         db.session.add(user)
         db.session.commit()
