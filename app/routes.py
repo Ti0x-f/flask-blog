@@ -22,7 +22,16 @@ def before_request():
         else:
             visits.visits += 1
             db.session.commit()
-
+@app.route('/register')
+def register():
+    form = LoginDashboardForm()
+    if form.validate_on_submit():
+        user = User(email='form.email.data')
+        user.set_password(form.data.password)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('index'))
+    return render_template('register.html', form=form)
 @app.route('/')
 @app.route('/index')
 def index(): #Render 5 posts on the index page, ordered by descendant timestamps
